@@ -1,0 +1,35 @@
+services:
+  usersdatapostgres:
+    container_name: usersdatapostgres
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rajeshhamal
+      POSTGRES_PASSWORD: nepatopsabthikthak
+      POSTGRES_DATABASE: mapsdatabase
+      POSTGRES_HOST: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - usersdata:/var/lib/postgresql/data
+    networks:
+      - mapsnetwork
+
+  adminer:
+    container_name: adminer
+    image: adminer:5
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: usersdatapostgres
+    ports:
+      - 8090:8080
+    networks:
+      - mapsnetwork
+    depends_on:
+      - usersdatapostgres
+
+networks:
+  mapsnetwork:
+
+volumes:
+  usersdata:

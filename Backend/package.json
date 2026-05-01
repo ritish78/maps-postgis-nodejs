@@ -1,0 +1,25 @@
+{
+  "name": "maps-postgis-nodejs",
+  "version": "1.0.0",
+  "description": "Using PostGIS in Postgres to interact with real world maps data.",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "Ritish Timalsina",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsc": "^2.0.4",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "fastify": "^5.8.5"
+  }
+}
