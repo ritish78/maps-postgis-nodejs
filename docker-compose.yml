@@ -1,12 +1,12 @@
 services:
   usersdatapostgres:
     container_name: usersdatapostgres
-    image: postgres:18-alpine
+    image: postgis/postgis:16-3.5-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: rajeshhamal
       POSTGRES_PASSWORD: nepatopsabthikthak
-      POSTGRES_DATABASE: mapsdatabase
+      POSTGRES_DB: mapsdatabase
       POSTGRES_HOST: postgres
     ports:
       - 5432:5432

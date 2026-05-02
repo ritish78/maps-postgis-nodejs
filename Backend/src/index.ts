@@ -1,9 +1,7 @@
-import dotenv from "dotenv";
 import Fastify, { FastifyRequest, FastifyReply } from "fastify";
+import { SERVER_PORT } from "./config";
 
-dotenv.config();
-
-const SERVER_PORT = Number(process.env.FASTIFY_SERVER_PORT);
+import db from "./db";
 
 const fastify = Fastify({
   logger: true,
