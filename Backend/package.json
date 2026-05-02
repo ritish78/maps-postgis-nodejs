@@ -10,7 +10,8 @@
     "migrate:generate": "drizzle-kit generate",
     "migrate:run": "tsx src/db/migrate.ts",
     "migrate:push": "drizzle-kit push",
-    "studio": "drizzle-kit studio"
+    "studio": "drizzle-kit studio",
+    "seed": "tsx seed.ts"
   },
   "keywords": [],
   "author": "Ritish Timalsina",
