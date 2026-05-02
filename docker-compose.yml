@@ -15,6 +15,23 @@ services:
     networks:
       - mapsnetwork
 
+  nominatim:
+    container_name: nominatim
+    image: mediagis/nominatim:5.3.2
+    restart: unless-stopped
+    environment:
+      PBF_URL: https://download.geofabrik.de/asia/nepal-latest.osm.pbf
+      REPLICATION_URL: https://download.geofabrik.de/asia/nepal-updates/
+      NOMINATIM_PASSWORD: password123
+    ports:
+      - 8080:8080
+    volumes:
+      - nomatimdata:/var/lib/postgresql/14/main
+    depends_on:
+      - usersdatapostgres
+    networks:
+      - mapsnetwork
+
   adminer:
     container_name: adminer
     image: adminer:5
@@ -33,3 +50,4 @@ networks:
 
 volumes:
   usersdata:
+  nomatimdata:

@@ -25,3 +25,10 @@ cd backend
 npm run migrate:generate
 npm run migrate:run
 ```
+
+# Using Nominatim:
+
+```
+GET http://localhost:8080/search?q=koteshwor&format=json
+GET http://localhost:8080/search?q=Thamel+Kathmandu&format=json
+```
