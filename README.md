@@ -56,6 +56,9 @@ FOR EACH ROW EXECUTE FUNCTION sync_location();
 ```
 npm run seed
 ```
+After seeding the database:
+<img width="1830" height="627" alt="After seeding the database with address" src="https://github.com/user-attachments/assets/ededbdaf-435f-4666-9cab-c858daba37c0" />
+
 
 # Using Nominatim:
 
