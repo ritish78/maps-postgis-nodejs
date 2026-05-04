@@ -10,7 +10,7 @@ import {
   timestamp,
   integer,
 } from "drizzle-orm/pg-core";
-import { address } from "./address";
+import { address } from "../models/address.js";
 
 export const PropertyType = pgEnum("property_type", ["House", "Land"]);
 export const PropertyStatus = pgEnum("property_status", ["Sale", "Rent", "Hold", "Sold"]);

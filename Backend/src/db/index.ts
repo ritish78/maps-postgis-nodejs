@@ -1,7 +1,7 @@
 console.log("Index.ts in db folder is loaded!");
 import pkg from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { DATABASE_URL } from "../config";
+import { DATABASE_URL } from "../config/index.js";
 import { sql } from "drizzle-orm";
 
 const { Pool } = pkg;
