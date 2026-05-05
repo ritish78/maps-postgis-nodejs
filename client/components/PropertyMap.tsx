@@ -1,0 +1,192 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup, Circle, useMapEvents } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import createPinIcon from "@/lib/pinIcon";
+import { Property } from "@/types/property.types";
+
+const defaultIcon = createPinIcon("#18181b"); //properties
+const searchIcon = createPinIcon("white", "#18181b"); //white with dark border for search
+
+//Handles click on map to set search center
+function MapClickHandler({ onClick }: { onClick: (lat: number, lng: number) => void }) {
+  useMapEvents({
+    click(e) {
+      onClick(e.latlng.lat, e.latlng.lng);
+    },
+  });
+  return null;
+}
+
+export default function PropertyMap() {
+  const [allProperties, setAllProperties] = useState<Property[]>([]);
+  const [nearbyProperties, setNearbyProperties] = useState<Property[]>([]);
+  const [searchCenter, setSearchCenter] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [radius, setRadius] = useState(5); //the initial disatnce is 5km
+  const [isSearching, setIsSearching] = useState(false);
+
+  //fetching all properties on mount
+  useEffect(() => {
+    async function fetchAll() {
+      const res = await fetch("http://localhost:5000/api/v1/property");
+      const data = await res.json();
+      setAllProperties(data);
+    }
+    fetchAll();
+  }, []);
+
+  //fetching nearby properties when search center or radius changes
+  useEffect(() => {
+    if (!searchCenter) return;
+
+    async function fetchNearby() {
+      setIsSearching(true);
+      const res = await fetch(
+        `http://localhost:5000/api/v1/property/nearby?latitude=${searchCenter!.latitude}&longitude=${searchCenter!.longitude}&radius=${radius}`,
+      );
+      const data = await res.json();
+      setNearbyProperties(data);
+      setIsSearching(false);
+    }
+
+    fetchNearby();
+  }, [searchCenter, radius]);
+
+  const handleMapClick = (latitude: number, longitude: number) => {
+    setSearchCenter({ latitude, longitude });
+  };
+
+  //Properties to display as markers
+  const displayProperties = searchCenter ? nearbyProperties : allProperties;
+
+  return (
+    <div className="flex flex-col gap-4 p-4 h-screen bg-background text-foreground">
+      <div className="flex items-center gap-6 px-4 py-3 rounded-lg border bg-card shadow-sm">
+        <h1 className="text-lg font-semibold tracking-tight">Property Map</h1>
+
+        <div className="flex items-center gap-3">
+          <label className="text-sm text-muted-foreground">Radius: {radius}km</label>
+
+          <input
+            type="range"
+            min={1}
+            max={50}
+            value={radius}
+            onChange={(e) => setRadius(Number(e.target.value))}
+            className="w-40 accent-primary"
+          />
+        </div>
+
+        {searchCenter && (
+          <button
+            onClick={() => {
+              setSearchCenter(null);
+              setNearbyProperties([]);
+            }}
+            className="text-sm px-3 py-1.5 rounded-md border bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+          >
+            Clear Search
+          </button>
+        )}
+
+        <p className="text-sm text-muted-foreground ml-auto">
+          {searchCenter
+            ? isSearching
+              ? "Searching!"
+              : `${nearbyProperties.length} properties within ${radius}km`
+            : "Click anywhere on the map to search by radius"}
+        </p>
+      </div>
+
+      <MapContainer
+        center={[27.7172, 85.324]}
+        zoom={12}
+        className="flex-1 rounded-xl border shadow-sm z-0"
+        zoomControl={true}
+        attributionControl={true}
+      >
+        <TileLayer
+          url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
+          //   url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png" //Could also use this one
+          attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+
+        <MapClickHandler onClick={handleMapClick} />
+
+        {searchCenter && (
+          <>
+            <Marker position={[searchCenter.latitude, searchCenter.longitude]} icon={searchIcon} />
+            <Circle
+              center={[searchCenter.latitude, searchCenter.longitude]}
+              radius={radius * 1000}
+              pathOptions={{
+                color: "#18181b",
+                fillColor: "#18181b",
+                fillOpacity: 0.05,
+                weight: 1.5,
+              }}
+            />
+          </>
+        )}
+
+        {displayProperties.map((p) => (
+          <Marker key={p.id} position={[p.latitude, p.longitude]} icon={defaultIcon}>
+            <Popup minWidth={260} className="property-card-popup">
+              <div>
+                <div className="w-full h-40 bg-zinc-100 relative overflow-hidden">
+                  {p.image_url && p.image_url.length > 0 ? (
+                    //We could also use Nextjs Image component here. But we then would need to config
+                    ///nextjs to use different remote patterns for images. For this test purpose
+                    //I am currently using unsplash for images, and I could use another link and
+                    //i don't want it to keep on breaking and having to change.
+                    //In Grihabhoomi, I have used cloudinary so will be smoother there.
+                    <img src={p.image_url[0]} alt={p.title} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="text-xs text-zinc-500">No image available</span>
+                    </div>
+                  )}
+                  <span className="absolute top-2.5 left-2.5 bg-zinc-900 text-white text-[11px] font-medium px-2.5 py-0.5 rounded-full">
+                    {p.status}
+                  </span>
+                </div>
+
+                <div className="px-3.5 py-3 flex flex-col gap-0.5">
+                  <p className="text-sm font-medium leading-snug" style={{ margin: 0 }}>
+                    {p.title}
+                  </p>
+                  <p className="text-xs text-zinc-500" style={{ margin: 0 }}>
+                    {" "}
+                    {p.property_type}
+                    {p.close_landmark ? ` · Near ${p.close_landmark}` : ""}
+                  </p>
+                  <p className="text-xs text-zinc-500" style={{ margin: 0 }}>
+                    {" "}
+                    {p.municipality}, {p.province}
+                  </p>
+
+                  <div className="flex justify-between items-center mt-1">
+                    <p className="text-sm font-medium" style={{ margin: 0 }}>
+                      {" "}
+                      Rs. {p.price}
+                      {p.to_rent && (
+                        <span className="text-[11px] font-normal text-zinc-500 ml-1">/month</span>
+                      )}
+                      {p.negotiable && (
+                        <span className="text-[11px] font-normal text-zinc-500 ml-1"> · Negotiable</span>
+                      )}
+                    </p>
+                    {p.distance_km && (
+                      <span className="text-[11px] text-zinc-500">{p.distance_km}km away</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    </div>
+  );
+}

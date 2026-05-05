@@ -184,6 +184,10 @@ async function seed() {
       availableTill: nextYear,
       price: 15000000,
       negotiable: true,
+      imageUrl: [
+        "https://plus.unsplash.com/premium_photo-1689609950112-d66095626efb?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://plus.unsplash.com/premium_photo-1689609950071-af404daa58a0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D",
+      ],
       status: "Sale",
       expiresOn: nextYear,
       views: 10,
@@ -201,6 +205,9 @@ async function seed() {
       availableFrom: now.toISOString(),
       price: 25000,
       negotiable: false,
+      imageUrl: [
+        "https://images.unsplash.com/photo-1598228723793-52759bba239c?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      ],
       status: "Rent",
       expiresOn: nextYear,
       views: 34,
@@ -217,6 +224,9 @@ async function seed() {
       availableFrom: now.toISOString(),
       price: 25000000,
       negotiable: true,
+      imageUrl: [
+        "https://images.unsplash.com/photo-1560170412-0f7df0eb0fb1?q=80&w=1148&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      ],
       status: "Sale",
       expiresOn: twoYears,
       views: 52,
@@ -234,6 +244,9 @@ async function seed() {
       availableFrom: now.toISOString(),
       price: 8000000,
       negotiable: true,
+      imageUrl: [
+        "https://images.unsplash.com/photo-1634255968403-cd9e978d0f44?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      ],
       status: "Sale",
       expiresOn: twoYears,
       views: 18,
@@ -250,6 +263,9 @@ async function seed() {
       availableFrom: now.toISOString(),
       price: 8000,
       negotiable: false,
+      imageUrl: [
+        "https://images.unsplash.com/photo-1647579350413-a6ada4e480ed?q=80&w=1025&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      ],
       status: "Rent",
       expiresOn: nextYear,
       views: 7,
@@ -266,6 +282,9 @@ async function seed() {
       availableFrom: now.toISOString(),
       price: 18000000,
       negotiable: true,
+      imageUrl: [
+        "https://images.unsplash.com/photo-1718882576331-ac910cbb9e81?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      ],
       status: "Sale",
       expiresOn: twoYears,
       views: 29,
@@ -283,6 +302,9 @@ async function seed() {
       availableFrom: now.toISOString(),
       price: 20000,
       negotiable: false,
+      imageUrl: [
+        "https://images.unsplash.com/photo-1713789296574-0e56ecd53cbb?q=80&w=1220&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      ],
       status: "Rent",
       expiresOn: nextYear,
       views: 41,
@@ -299,6 +321,9 @@ async function seed() {
       availableFrom: now.toISOString(),
       price: 45000,
       negotiable: true,
+      imageUrl: [
+        "https://images.unsplash.com/photo-1720493480479-fa376e364071?q=80&w=1331&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      ],
       status: "Rent",
       expiresOn: nextYear,
       views: 63,
@@ -315,6 +340,9 @@ async function seed() {
       availableFrom: now.toISOString(),
       price: 12000000,
       negotiable: false,
+      imageUrl: [
+        "https://plus.unsplash.com/premium_photo-1677620026059-34bd259b0c5f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      ],
       status: "Sale",
       expiresOn: twoYears,
       views: 22,
@@ -331,6 +359,9 @@ async function seed() {
       availableFrom: now.toISOString(),
       price: 50000000,
       negotiable: true,
+      imageUrl: [
+        "https://images.unsplash.com/photo-1683029083464-4b28b07d7f09?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      ],
       status: "Sale",
       expiresOn: twoYears,
       views: 88,

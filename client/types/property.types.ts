@@ -1,0 +1,22 @@
+export type Property = {
+  id: string;
+  title: string;
+  price: number;
+  status: "Sale" | "Rent" | "Hold" | "Sold";
+  property_type: "House" | "Land";
+  to_rent: boolean;
+  negotiable: boolean;
+  close_landmark: string | null;
+  image_url: string[] | null;
+  featured: boolean;
+  house_number: string;
+  street: string;
+  ward_number: number;
+  municipality: string;
+  city: string;
+  district: string;
+  province: string;
+  latitude: number;
+  longitude: number;
+  distance_km?: number;
+};
