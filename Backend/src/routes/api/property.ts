@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { getPropertyByLocationRadius } from "../../db/preparedStatement.js";
+import { getAllPropertiesOnMap } from "src/controller/property.js";
 // import { getPropertyByLocationRadiusPrepared } from "src/db/preparedStatement";
 
 /**
@@ -7,6 +8,12 @@ import { getPropertyByLocationRadius } from "../../db/preparedStatement.js";
  * @param fastify
  */
 export async function propertyRoutes(fastify: FastifyInstance) {
+  fastify.get("/", async (request: FastifyRequest, reply: FastifyReply) => {
+    const allProperties = await getAllPropertiesOnMap();
+
+    return reply.send(allProperties);
+  });
+
   //  /api/v1/property/nearby?latitude=27.7105&longitude=85.3157&radius=5
   fastify.get<{ Querystring: { latitude: string; longitude: string; radius?: string } }>(
     "/nearby",

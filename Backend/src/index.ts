@@ -1,11 +1,17 @@
 import Fastify, { FastifyRequest, FastifyReply } from "fastify";
 import { SERVER_PORT } from "../src/config/index.js";
 import { propertyRoutes } from "../src/routes/api/property.js";
+import cors from "@fastify/cors";
 
 import db from "../src/db/index.js";
 
 const fastify = Fastify({
   logger: true,
+});
+
+await fastify.register(cors, {
+  origin: "http://localhost:3000",
+  methods: ["GET"], //Currently, I am only sending properties from database to frotend.
 });
 
 fastify.get("/api/v1/ping", (request: FastifyRequest, reply: FastifyReply) => {

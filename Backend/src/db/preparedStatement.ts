@@ -1,5 +1,6 @@
 import db from "../db/index.js";
-import { sql } from "drizzle-orm";
+import { isNotNull, sql } from "drizzle-orm";
+import { address } from "src/models/address.js";
 
 // export const getPropertyByLocationRadiusPrepared = db
 //   .execute(
@@ -60,3 +61,20 @@ export async function getPropertyByLocationRadius(
 
   return propertiesFromDatabase.rows;
 }
+
+export const getAllPropertiesOnMapPrepared = db
+  .select({
+    id: address.id,
+    houseNumber: address.houseNumber,
+    street: address.street,
+    wardNumber: address.wardNumber,
+    municipality: address.municipality,
+    city: address.city,
+    district: address.district,
+    province: address.province,
+    latitude: address.latitude,
+    longitude: address.longitude,
+  })
+  .from(address)
+  .where(isNotNull(address.location))
+  .prepare("get-all-properties-on-map");
