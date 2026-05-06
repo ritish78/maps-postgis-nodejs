@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup, Circle, useMapEvents } from "re
 import "leaflet/dist/leaflet.css";
 import createPinIcon from "@/lib/pinIcon";
 import { Property } from "@/types/property.types";
+import { formatPrice } from "@/lib/formatPrice";
 
 const defaultIcon = createPinIcon("#18181b"); //properties
 const searchIcon = createPinIcon("white", "#18181b"); //white with dark border for search
@@ -169,7 +170,7 @@ export default function PropertyMap() {
                   <div className="flex justify-between items-center mt-1">
                     <p className="text-sm font-medium" style={{ margin: 0 }}>
                       {" "}
-                      Rs. {p.price}
+                      Rs. {formatPrice(p.price)}
                       {p.to_rent && (
                         <span className="text-[11px] font-normal text-zinc-500 ml-1">/month</span>
                       )}
