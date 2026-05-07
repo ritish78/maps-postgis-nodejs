@@ -55,6 +55,9 @@ export default function PropertyMap() {
   //   }, []);
   useEffect(() => {
     if (!bounds) return;
+    //Optimizing. When the user has selected a point in map, we don't want to fetch
+    //properties when the user is zooming in/out or moving in the map.
+    if (searchCenter) return;
 
     const timer = setTimeout(async () => {
       const { minLatitude, maxLatitude, minLongitude, maxLongitude } = bounds;
@@ -66,7 +69,7 @@ export default function PropertyMap() {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [bounds]);
+  }, [bounds, searchCenter]);
 
   //fetching nearby properties when search center or radius changes
   useEffect(() => {
