@@ -107,6 +107,12 @@ export const getAllPropertiesOnMapPrepared = db
   .where(isNotNull(address.location))
   .prepare("get-all-properties-on-map");
 
+/**
+ * @param latitude
+ * @param longitude
+ * @param radiusInMeters
+ * @returns
+ */
 export async function getPropertyByLocationRadius(
   latitude: number,
   longitude: number,
@@ -151,6 +157,37 @@ export async function getPropertyByLocationRadius(
         ${radiusInMeters}
       )
     ORDER BY distance_km ASC
+  `);
+
+  return result.rows;
+}
+
+/**
+ * @param minLatitude
+ * @param maxLatitude
+ * @param minLongitude
+ * @param maxLongitude
+ * @returns
+ */
+export async function getPropertyByUserViewport(
+  minLatitude: number,
+  maxLatitude: number,
+  minLongitude: number,
+  maxLongitude: number,
+) {
+  const result = await db.execute(sql`
+    SELECT
+      p.id, p.title, p.price, p.status, p.property_type,
+      p.to_rent, p.negotiable, p.close_landmark, p.image_url, p.featured,
+      a.house_number, a.street, a.ward_number, a.municipality,
+      a.city, a.district, a.province, a.latitude, a.longitude
+    FROM property p
+    LEFT JOIN address a ON p.address = a.id
+    WHERE
+      a.location IS NOT NULL
+      AND a.latitude BETWEEN ${minLatitude} AND ${maxLatitude}
+      AND a.longitude BETWEEN ${minLongitude} AND ${maxLongitude}
+    LIMIT 100
   `);
 
   return result.rows;

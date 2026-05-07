@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { getPropertyByLocationRadius } from "../../db/preparedStatement.js";
+import { getPropertyByLocationRadius, getPropertyByUserViewport } from "../../db/preparedStatement.js";
 import { getAllPropertiesOnMap } from "src/controller/property.js";
 // import { getPropertyByLocationRadiusPrepared } from "src/db/preparedStatement";
 
@@ -35,4 +35,24 @@ export async function propertyRoutes(fastify: FastifyInstance) {
       return reply.send(propertiesFromDatabase);
     },
   );
+
+  //Getting all properties to display initially on the map is getting slower
+  //as we are sending all properties from the database to the map.
+  //So, implementing a way to get properties that are on the view port of the user.
+  // /api/v1/property/viewport?minLatitude=&maxLatitude=&minLongitude=&maxLongitude=
+  // E.g. http://localhost:5000/api/v1/property/viewport?minLatitude=27.702755759687733&maxLatitude=27.726538670810182&minLongitude=85.30446087162532&maxLongitude=85.34059559147397
+  fastify.get<{
+    Querystring: { minLatitude: string; maxLatitude: string; minLongitude: string; maxLongitude: string };
+  }>("/viewport", async (request, reply: FastifyReply) => {
+    const { minLatitude, maxLatitude, minLongitude, maxLongitude } = request.query;
+
+    const propertiesFromDatabase = await getPropertyByUserViewport(
+      parseFloat(minLatitude),
+      parseFloat(maxLatitude),
+      parseFloat(minLongitude),
+      parseFloat(maxLongitude),
+    );
+
+    return reply.send(propertiesFromDatabase);
+  });
 }

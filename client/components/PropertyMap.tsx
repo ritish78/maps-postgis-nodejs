@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import createPinIcon from "@/lib/pinIcon";
 import { Property } from "@/types/property.types";
 import { formatPrice } from "@/lib/formatPrice";
+import BoundsTracker from "./BoundsTracker";
+import { MapBounds } from "@/types/mapbounds.types";
 
 const defaultIcon = createPinIcon("#18181b"); //properties
 const searchIcon = createPinIcon("white", "#18181b"); //white with dark border for search
@@ -26,16 +28,45 @@ export default function PropertyMap() {
   const [searchCenter, setSearchCenter] = useState<{ latitude: number; longitude: number } | null>(null);
   const [radius, setRadius] = useState(5); //the initial disatnce is 5km
   const [isSearching, setIsSearching] = useState(false);
+  const [bounds, setBounds] = useState<MapBounds | null>(null);
+  const handleBoundsChange = useCallback((newBounds: MapBounds) => {
+    setBounds((prev) => {
+      if (
+        prev?.minLatitude === newBounds.minLatitude &&
+        prev?.maxLatitude === newBounds.maxLatitude &&
+        prev?.minLongitude === newBounds.minLongitude &&
+        prev?.maxLongitude === newBounds.maxLongitude
+      ) {
+        return prev;
+      }
+      return newBounds;
+    });
+  }, []);
 
   //fetching all properties on mount
+  //Now, changing to fetching properties on the basis of user's view port
+  //   useEffect(() => {
+  //     async function fetchAll() {
+  //       const res = await fetch("http://localhost:5000/api/v1/property");
+  //       const data = await res.json();
+  //       setAllProperties(data);
+  //     }
+  //     fetchAll();
+  //   }, []);
   useEffect(() => {
-    async function fetchAll() {
-      const res = await fetch("http://localhost:5000/api/v1/property");
+    if (!bounds) return;
+
+    const timer = setTimeout(async () => {
+      const { minLatitude, maxLatitude, minLongitude, maxLongitude } = bounds;
+      const res = await fetch(
+        `http://localhost:5000/api/v1/property/viewport?minLatitude=${minLatitude}&maxLatitude=${maxLatitude}&minLongitude=${minLongitude}&maxLongitude=${maxLongitude}`,
+      );
       const data = await res.json();
       setAllProperties(data);
-    }
-    fetchAll();
-  }, []);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [bounds]);
 
   //fetching nearby properties when search center or radius changes
   useEffect(() => {
@@ -107,6 +138,8 @@ export default function PropertyMap() {
         zoomControl={true}
         attributionControl={true}
       >
+        <BoundsTracker onChange={handleBoundsChange} />
+
         <TileLayer
           url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
           //   url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png" //Could also use this one
